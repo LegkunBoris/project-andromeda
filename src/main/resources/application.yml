@@ -1,0 +1,31 @@
+spring:
+  # Templates reloading during development
+  thymeleaf:
+    prefix: file:src/main/resources/templates/
+    cache: false
+
+  # Static resources reloading during development
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        cachecontrol:
+          max-age: 0
+  datasource:
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5
+    password: admin
+    url: jdbc:postgresql://localhost:5432/oauth
+    username: admin
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    password: admin
+    url: jdbc:postgresql://localhost:5432/oauth
+    user: admin
+server:
+  port: 8088

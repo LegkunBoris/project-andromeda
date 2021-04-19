@@ -1,0 +1,211 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="1.0.0" author="Boris Legkun">
+        <createTable tableName="oauth_users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(100)">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="mobile" type="VARCHAR(16)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1.0.1" author="Boris Legkun">
+        <createTable tableName="oauth_roles">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1.0.2" author="Boris Legkun">
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT"/>
+            <column name="role_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1.0.3" author="Boris Legkun">
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="user_id"
+                                 referencedTableName="oauth_users" referencedColumnNames="id"
+                                 constraintName="fk_user_roles_users"
+                                 onDelete="CASCADE" onUpdate="RESTRICT"/>
+    </changeSet>
+    <changeSet id="1.0.4" author="Boris Legkun">
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="role_id"
+                                 referencedTableName="oauth_roles" referencedColumnNames="id"
+                                 constraintName="fk_user_roles_roles"
+                                 onDelete="CASCADE" onUpdate="RESTRICT"/>
+    </changeSet>
+    <changeSet id="1.0.5" author="Boris Legkun">
+        <insert tableName="oauth_roles">
+            <column name="name" value="ROLE_USER"/>
+            <column name="description" value="Обычный пользователь"/>
+        </insert>
+        <insert tableName="oauth_roles">
+            <column name="name" value="ROLE_ADMIN"/>
+            <column name="description" value="Превилигированый пользователь"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="Boris Legkun">
+        <insert tableName="oauth_users">
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@admin.com"/>
+            <column name="password"
+                    value="$2a$10$n/jj7WvHzojrHHUHj0JBWuj70By5xotmSNXY/E38bGAhf2qW2ZH76"/>
+            <column name="name" value="admin"/>
+            <column name="surname" value="admin"/>
+            <column name="mobile" value="+7(951)647-02-88"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="Boris Legkun">
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="1"/>
+        </insert>
+        <insert tableName="user_roles">
+            <column name="user_id" value="1"/>
+            <column name="role_id" value="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="Boris Legkun">
+        <createTable tableName="oauth_client_details">
+            <column name="client_id" type="varchar(255)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="resource_ids" type="varchar(256)"/>
+            <column name="client_secret" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="authorized_grant_types" type="varchar(256)"/>
+            <column name="web_server_redirect_uri" type="varchar(256)"/>
+            <column name="authorities" type="varchar(256)"/>
+            <column name="access_token_validity" type="int"/>
+            <column name="refresh_token_validity" type="int"/>
+            <column name="additional_information" type="varchar(4096)"/>
+            <column name="autoapprove" type="varchar(256)"/>
+        </createTable>
+
+        <createTable tableName="oauth_client_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="longvarbinary"/>
+            <column name="authentication_id" type="varchar(256)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_name" type="varchar(256)"/>
+            <column name="client_id" type="varchar(256)"/>
+        </createTable>
+
+        <createTable tableName="oauth_access_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="longvarbinary"/>
+            <column name="authentication_id" type="varchar(256)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_name" type="varchar(256)"/>
+            <column name="client_id" type="varchar(256)"/>
+            <column name="authentication" type="longvarbinary"/>
+            <column name="refresh_token" type="varchar(256)"/>
+        </createTable>
+
+        <createTable tableName="oauth_refresh_token">
+            <column name="token_id" type="varchar(256)"/>
+            <column name="token" type="longvarbinary"/>
+            <column name="authentication" type="longvarbinary"/>
+        </createTable>
+
+        <createTable tableName="oauth_code">
+            <column name="code" type="varchar(256)"/>
+            <column name="authentication" type="longvarbinary"/>
+        </createTable>
+
+        <createTable tableName="oauth_approvals">
+            <column name="userId" type="varchar(256)"/>
+            <column name="clientId" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="status" type="varchar(10)"/>
+            <column name="expiresAt" type="timestamp"/>
+            <column name="lastModifiedAt" type="timestamp"
+                    defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+
+        <createTable tableName="ClientDetails">
+            <column name="appId" type="varchar(256)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="resourceIds" type="varchar(256)"/>
+            <column name="appSecret" type="varchar(256)"/>
+            <column name="scope" type="varchar(256)"/>
+            <column name="grantTypes" type="varchar(256)"/>
+            <column name="redirectUrl" type="varchar(256)"/>
+            <column name="authorities" type="varchar(256)"/>
+            <column name="access_token_validity" type="int"/>
+            <column name="refresh_token_validity" type="int"/>
+            <column name="additionalInformation" type="varchar(4096)"/>
+            <column name="autoApproveScopes" type="varchar(256)"/>
+        </createTable>
+
+        <createIndex indexName="oauth_access_token_id" tableName="oauth_access_token">
+            <column name="token_id"/>
+        </createIndex>
+        <createIndex indexName="oauth_refresh_token_id" tableName="oauth_access_token">
+            <column name="token_id"/>
+        </createIndex>
+
+        <insert tableName="oauth_client_details">
+            <column name="client_id" value="boris-client"/>
+            <column name="client_secret"
+                    value="boris-secret"/>
+            <column name="scope" value="read,write"/>
+            <column name="authorized_grant_types"
+                    value="password,refresh_token,client_credentials,authorization_code"/>
+            <column name="authorities" value="ROLE_TRUSTED_CLIENT"/>
+            <column name="access_token_validity" value="300"/>
+            <column name="refresh_token_validity" value="1800"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,9 @@
+.row-no-margin {
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: 20px;
+}
+
+.col-no-padding {
+    padding: 0px;
+}

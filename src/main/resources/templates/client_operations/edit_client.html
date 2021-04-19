@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Spring Security Example </title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-body">
+            <h5 th:text="'Изменение данных клиента: ' + ${client.clientId}"></h5>
+            <form id="updateClientForm" action="#" th:action="@{/clients/update}"
+                  th:object="${client}"
+                  method="post">
+                <div class="form-group">
+                    <label for="clientSecret">Client secret:</label>
+                    <input id="clientSecret" class="form-control" type="text"
+                           th:field="*{clientSecret}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="resourceIds">Resource ids:</label>
+                    <input id="resourceIds" class="form-control" type="text"
+                           th:field="*{resourceIds}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="scopes">Scopes:</label>
+                    <input id="scopes" class="form-control" type="text" th:field="*{scope}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="authorizedGrantTypes">Authorized Grant Types:</label>
+                    <input id="authorizedGrantTypes" class="form-control" type="text"
+                           th:field="*{authorizedGrantTypes}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="accessTokenValiditySeconds">Access token validity (s):</label>
+                    <input id="accessTokenValiditySeconds" class="form-control" type="number"
+                           min="0" th:field="*{accessTokenValiditySeconds}"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="refreshTokenValidity">Refresh token validity (s):</label>
+                    <input id="refreshTokenValidity" class="form-control" type="number" min="0"
+                           th:field="*{refreshTokenValiditySeconds}"/>
+                </div>
+
+                <a href="/clients" class="btn btn-info" role="button">Cancel</a>
+                <button type="submit" class="btn btn-primary" form="updateClientForm">Save changes
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

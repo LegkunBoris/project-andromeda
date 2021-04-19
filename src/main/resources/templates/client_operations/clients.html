@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Spring Security Example </title>
+    <div th:replace="fragments/header :: header-css"/>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link th:href="@{css/clients.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Клиенты</h5>
+            <div class="col-xs-12">
+                <div class="row row-no-margin">
+                    <div class="col col-no-padding">
+                        <input type="text" class="form-control" id="client"
+                               aria-describedby="emailHelp" placeholder="Поиск клиентов">
+                    </div>
+                    <div class="col-md-auto pr-0">
+                        <a href="/clients/create" class="btn btn-secondary" role="button">Добавить
+                            клиента</a>
+                    </div>
+                </div>
+                <div class="row row-no-margin">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="text-nowrap">
+                            <tr>
+                                <th scope="col">Client ID</th>
+                                <th scope="col">Resource IDs</th>
+                                <th scope="col">Client secret</th>
+                                <th scope="col">Scopes</th>
+                                <th scope="col">Authorized Grant Types</th>
+                                <th scope="col">Access Token Validity(s)</th>
+                                <th scope="col">Refresh Token Validity(s)</th>
+                                <th scope="col">Additional Information</th>
+                                <th scope="col">Operations</th>
+                            </tr>
+                            </thead>
+                            <tbody id="clientsTable">
+                            <tr th:each="client : ${clients}" class="text-nowrap">
+                                <th th:text="${client.clientId}" scope="row"/>
+                                <td th:text="${client.resourceIds}"/>
+                                <td th:text="${client.clientSecret}"/>
+                                <td th:text="${client.scope}"/>
+                                <td th:text="${client.authorizedGrantTypes}"/>
+                                <td th:text="${client.accessTokenValiditySeconds}"/>
+                                <td th:text="${client.refreshTokenValiditySeconds}"/>
+                                <td th:text="${client.additionalInformation}"/>
+                                <td>
+                                    <a th:href="@{/clients/delete/{id}(id=${client.clientId})}">delete</a>
+                                    /
+                                    <a th:href="@{/clients/edit/{id}(id=${client.clientId})}">edit</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#client").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#clientsTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>
